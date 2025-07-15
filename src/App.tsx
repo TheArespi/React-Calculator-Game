@@ -18,6 +18,7 @@ function App() {
   const [gameState, setGameState] = React.useState<number>(0);
   const [digitsUsed, setDigitsUsed] = React.useState<number>(0);
   const [correct, setCorrect] = React.useState<boolean>(false);
+  const [swaps, setSwaps] = React.useState<number>(5);
 
   const validOperations = new Set<string>(); 
   validOperations.add("+");
@@ -51,6 +52,23 @@ function App() {
       setOperation(digit);
     } else if (validDigits.has(digit)) {
       setSendDigitQueue(prev => [...prev, digit]);
+    }
+  }
+
+  const onDigitSwap = (digit: string) => {
+    if (gameState == 1)
+      return;
+
+    if (swaps > 0) {
+      let newDigit = digit;
+      while(newDigit === digit) {
+        newDigit = GenerateRandomDigit();
+      }
+      setDigitChoices(prev => [...prev, newDigit]);
+      setSwaps(swaps - 1);
+
+    } else {
+      setDigitChoices(prev => [...prev, digit]);
     }
   }
 
@@ -199,7 +217,8 @@ function App() {
         <div>{ceilNumber}</div>
       </TextContainer>
     </div>
-    <div className="m-1.5 flex justify-center gap-1.5 rounded bg-gray-300 p-3">
+    <div className="m-1.5 flex items-center justify-center gap-1.5 rounded bg-gray-300 p-3">
+      <TextContainer color="rose-400" shadowColor='rose-500'>Swaps: {swaps}</TextContainer>
       <div className="mb-1.5 flex gap-1.5 rounded-sm bg-gray-400 p-1.5 font-mono text-4xl font-bold">
         { digitChoices.map((digit, index) => (
             <DigitButton 
@@ -211,7 +230,15 @@ function App() {
 
                 OnDigitChosen(digit);
                 setDigitChoices(prev => prev.filter((_, i) => i != index));
-              }}/>
+              }}
+              onRightClick={() => {
+                if (gameState == 1)
+                  return;
+
+                onDigitSwap(digit);
+                setDigitChoices(prev => prev.filter((_, i) => i != index));
+              }}
+              />
           ))
         }
       </div>

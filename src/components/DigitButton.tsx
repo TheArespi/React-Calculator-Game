@@ -8,6 +8,7 @@ interface DigitButtonProps {
     textColor?: string;
     textHighlight?: string;
     onPressButton?: () => void;
+    onRightClick?: () => void;
 }
 
 const DigitButton: React.FC<DigitButtonProps> = (props) => {
@@ -20,9 +21,16 @@ const DigitButton: React.FC<DigitButtonProps> = (props) => {
         textColor="text-black",
         textHighlight="text-black",
         onPressButton,
+        onRightClick,
     } = props;
 
     const [finalWidth, setFinalWidth] = React.useState<string>(`w-${width}`);
+
+    const handleRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        if (onRightClick)
+            onRightClick();
+    }
 
     React.useEffect(() => {
         setFinalWidth(`w-${width}`);
@@ -31,7 +39,8 @@ const DigitButton: React.FC<DigitButtonProps> = (props) => {
     return (
         <div 
             className={`aspect-square h-10 ${finalWidth} rounded-sm ${shadowColor} cursor-pointer`}
-            onClick={onPressButton}    
+            onClick={onPressButton}  
+            onContextMenu={handleRightClick}
         >
           <div className={`
                 h-8 
