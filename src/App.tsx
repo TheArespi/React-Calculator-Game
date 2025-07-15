@@ -3,6 +3,7 @@ import TextContainer from './components/TextContainer'
 import DigitContainer from './components/DigitContainer'
 import DigitButton from './components/DigitButton'
 import React from 'react'
+import Header from './components/Header'
 
 function App() {
 
@@ -207,17 +208,7 @@ function App() {
 
   return (
     <>
-    <div className="justify-end items-center m-1.5 flex gap-1.5 rounded bg-gray-300 p-3">
-      {
-        gameState == 1 ? (
-          <TextContainer color='emerald-400' shadowColor='emerald-500'>+{addtlScore}</TextContainer>
-        ) : (
-          <></>
-        )
-      }
-      
-      <TextContainer >Score: {score}</TextContainer>
-    </div>
+    <Header gameState={gameState} score={score} addtlScore={addtlScore} />
     <div className="m-1.5 grid grid-cols-3 gap-1.5 rounded bg-gray-300 p-3">
       <div></div>
       <div>
