@@ -19,6 +19,8 @@ function App() {
   const [digitsUsed, setDigitsUsed] = React.useState<number>(0);
   const [correct, setCorrect] = React.useState<boolean>(false);
   const [swaps, setSwaps] = React.useState<number>(5);
+  const [addtlScore, setAddtlScore] = React.useState<number>(0);
+  const [score, setScore] = React.useState<number>(0);
 
   const validOperations = new Set<string>(); 
   validOperations.add("+");
@@ -92,10 +94,21 @@ function App() {
     const formattedTotal = total - Math.floor(total) > 0 ? total.toFixed(2) : total;
     setTotalNumber(Number(formattedTotal));
 
-    if (floorNumber < total && total < ceilNumber)
+    if (floorNumber < total && total < ceilNumber) {
       setCorrect(true);
-    else
+
+      const operationUsed = operation != "";
+      const numbersUsed = digitsUsed - (operationUsed ? 1 : 0);
+
+      const roundScore = (4 - numbersUsed) * (operationUsed ? 2 : 1);
+
+      setAddtlScore(roundScore);
+    } else {
       setCorrect(false);
+
+      setAddtlScore(0);
+    }
+
 
     setChosenDigitQueue([]);
     setOperation("");
@@ -133,11 +146,14 @@ function App() {
   }
 
   const OnContinue = () => {
-    if (correct)
+    if (correct) {
       setPreviousNumber(totalNumber);
-    else{
+      setScore(score + addtlScore);
+    } else {
       setPreviousNumber(0);
       setSwaps(5);
+      setScore(0);
+      setAddtlScore(0);
     }
 
     setTotalNumber(0);
@@ -191,7 +207,18 @@ function App() {
 
   return (
     <>
-    <div className="justify-right m-1.5 grid grid-cols-3 gap-1.5 rounded bg-gray-300 p-3">
+    <div className="justify-end items-center m-1.5 flex gap-1.5 rounded bg-gray-300 p-3">
+      {
+        gameState == 1 ? (
+          <TextContainer color='emerald-400' shadowColor='emerald-500'>+{addtlScore}</TextContainer>
+        ) : (
+          <></>
+        )
+      }
+      
+      <TextContainer >Score: {score}</TextContainer>
+    </div>
+    <div className="m-1.5 grid grid-cols-3 gap-1.5 rounded bg-gray-300 p-3">
       <div></div>
       <div>
         <TextContainer>{previousNumber}</TextContainer>
