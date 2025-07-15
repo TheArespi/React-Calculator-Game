@@ -71,7 +71,8 @@ function App() {
     else if (operation === "")
       total = chosenNumber;
 
-    setTotalNumber(total);
+    const formattedTotal = total - Math.floor(total) > 0 ? total.toFixed(2) : total;
+    setTotalNumber(Number(formattedTotal));
 
     if (floorNumber < total && total < ceilNumber)
       setCorrect(true);
