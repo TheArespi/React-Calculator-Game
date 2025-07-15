@@ -1,5 +1,5 @@
 [X] SWAP
     - player has a limited amount of swaps, these swaps will swap a digit choice to a random one 
-[ ] Scoring
+[X] Scoring
     - using an operator will add score
     - using fewer digits will score more
