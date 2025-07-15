@@ -141,6 +141,9 @@ function App() {
               digit={digit} 
               textHighlight="text-gray-500" 
               onPressButton={() => {
+                if (gameState == 1)
+                  return;
+
                 OnDigitChosen(digit);
                 setDigitChoices(prev => prev.filter((_, i) => i != index));
               }}/>
