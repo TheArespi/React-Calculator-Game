@@ -3,3 +3,8 @@
 [X] Scoring
     - using an operator will add score
     - using fewer digits will score more
+[ ] Fix Issue when converting to calculator component
+    [X] digits used discrepancy
+    [ ] Clear not implemented
+[ ] convert to controller component
+[ ] convert to calculatorgame component
