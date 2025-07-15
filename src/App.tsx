@@ -16,6 +16,7 @@ function App() {
   const [ceilNumber, setCeilNumber] = React.useState<number>(0);
   const [totalNumber, setTotalNumber] = React.useState<number>(0);
   const [gameState, setGameState] = React.useState<number>(0);
+  const [digitsUsed, setDigitsUsed] = React.useState<number>(0);
 
   const validOperations = new Set<string>(); 
   validOperations.add("+");
@@ -40,6 +41,12 @@ function App() {
       return;
 
     if (validOperations.has(digit)) {
+      if (operation != "") {
+        setDigitChoices(prev => [...prev, operation]);
+      } else {
+        setDigitsUsed(digitsUsed + 1);
+      }
+
       setOperation(digit);
     } else if (validDigits.has(digit)) {
       setSendDigitQueue(prev => [...prev, digit]);
@@ -54,6 +61,12 @@ function App() {
 
     if (operation === "+")
       total = prevNumber + chosenNumber;
+    else if (operation === "*")
+      total = prevNumber * chosenNumber;
+    else if (operation === "-")
+      total = prevNumber - chosenNumber;
+    else if (operation === "/")
+      total = prevNumber / chosenNumber;
     else if (operation === "")
       total = chosenNumber;
 
@@ -77,13 +90,37 @@ function App() {
 
     setChosenDigitQueue([]);
     setOperation("");
+    setDigitsUsed(0);
+    setPreviousNumber(0);
+    setTotalNumber(0);
+  }
+
+  const GenerateRandomDigit = () => {
+    const isOperation = Math.random() < 0.25;
+
+      if (isOperation) {
+        const operationArray = Array.from(validOperations);
+        const randomIndex = Math.floor(Math.random() * operationArray.length);
+        return operationArray[randomIndex];
+      } else {
+        const digitArray = Array.from(validDigits);
+        const randomIndex = Math.floor(Math.random() * digitArray.length);
+        return digitArray[randomIndex];
+      }
   }
 
   const OnContinue = () => {
     setPreviousNumber(totalNumber);
     setTotalNumber(0);
 
-    setGameState(0)
+    for (let i = 0; i < digitsUsed; i++) {
+      const digit = GenerateRandomDigit();
+
+      setDigitChoices(prev => [...prev, digit]);
+    }
+
+    setGameState(0);
+    setDigitsUsed(0);
   }
 
   React.useEffect(() => {
@@ -95,6 +132,7 @@ function App() {
     localQueue.forEach(digit => {
       if (chosenDigitQueue.length < 3) {
         setChosenDigitQueue(prev => [...prev, digit]);
+        setDigitsUsed(digitsUsed + 1);
       } else {
         setDigitChoices(prev => [...prev, digit]);
       }
