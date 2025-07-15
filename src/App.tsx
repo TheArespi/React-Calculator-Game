@@ -142,7 +142,11 @@ function App() {
   }, [sendDigitQueue]);
 
   React.useEffect(() => {
-    setDigitChoices(["1", "2", "3", "4", "5", "+"]);
+    setDigitChoices([]);
+    for(let i = 0; i < 6; i++) {
+      const digit = GenerateRandomDigit();
+      setDigitChoices(prev => [...prev, digit]);
+    }
   }, []);
 
   return (
