@@ -36,6 +36,9 @@ function App() {
   validDigits.add("0");
 
   const OnDigitChosen = (digit: string) => {
+    if (gameState == 1)
+      return;
+
     if (validOperations.has(digit)) {
       setOperation(digit);
     } else if (validDigits.has(digit)) {
@@ -58,6 +61,8 @@ function App() {
 
     setChosenDigitQueue([]);
     setOperation("");
+
+    setGameState(1);
   }
 
   const OnClear = () => {
@@ -72,6 +77,13 @@ function App() {
 
     setChosenDigitQueue([]);
     setOperation("");
+  }
+
+  const OnContinue = () => {
+    setPreviousNumber(totalNumber);
+    setTotalNumber(0);
+
+    setGameState(0)
   }
 
   React.useEffect(() => {
@@ -165,7 +177,7 @@ function App() {
               shadowColor="bg-blue-700" 
               textColor="text-white" 
               textHighlight="text-blue-200" 
-              onPressButton={OnClear}
+              onPressButton={OnContinue}
             />
           )
         }
