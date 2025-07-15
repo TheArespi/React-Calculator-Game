@@ -7,7 +7,6 @@ import React from 'react'
 function App() {
 
   const [sendDigitQueue, setSendDigitQueue] = React.useState<string[]>([]);
-  const [removeDigitQueue, setremoveDigitQueue] = React.useState<string[]>([]);
   const [chosenDigitQueue, setChosenDigitQueue] = React.useState<string[]>([]);
   const [digitChoices, setDigitChoices] = React.useState<string[]>([]);
 
@@ -16,6 +15,7 @@ function App() {
   const [floorNumber, setFloorNumber] = React.useState<number>(0);
   const [ceilNumber, setCeilNumber] = React.useState<number>(0);
   const [totalNumber, setTotalNumber] = React.useState<number>(0);
+  const [gameState, setGameState] = React.useState<number>(0);
 
   const validOperations = new Set<string>(); 
   validOperations.add("+");
@@ -136,23 +136,40 @@ function App() {
         }
       </div>
       <div className="justify-right mb-1.5 flex gap-1.5 rounded-sm bg-gray-400 p-1.5 font-mono text-4xl font-bold">
-        <DigitButton 
-          digit="=" 
-          color="bg-blue-500" 
-          shadowColor="bg-blue-700" 
-          textColor="text-white" 
-          textHighlight="text-blue-200" 
-          onPressButton={OnEquals}
-        />
-        <DigitButton 
-          digit="CLEAR" 
-          width={30} 
-          color="bg-blue-500" 
-          shadowColor="bg-blue-700" 
-          textColor="text-white" 
-          textHighlight="text-blue-200" 
-          onPressButton={OnClear}
-        />
+        {
+          gameState == 0 ? (
+            <>
+              <DigitButton 
+                digit="=" 
+                color="bg-blue-500" 
+                shadowColor="bg-blue-700" 
+                textColor="text-white" 
+                textHighlight="text-blue-200" 
+                onPressButton={OnEquals}
+              />
+              <DigitButton 
+                digit="CLEAR" 
+                width={30} 
+                color="bg-blue-500" 
+                shadowColor="bg-blue-700" 
+                textColor="text-white" 
+                textHighlight="text-blue-200" 
+                onPressButton={OnClear}
+              />
+            </>
+          ) : (
+            <DigitButton 
+              digit="CONTINUE" 
+              width={50} 
+              color="bg-blue-500" 
+              shadowColor="bg-blue-700" 
+              textColor="text-white" 
+              textHighlight="text-blue-200" 
+              onPressButton={OnClear}
+            />
+          )
+        }
+        
       </div>
     </div>
   </>
