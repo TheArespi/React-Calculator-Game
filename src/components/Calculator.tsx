@@ -72,8 +72,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           
               setTotalNumber(0);
           
-              const returnedDigits = digitsUsed + (operation != "" ? 1 : 0);
-              for (let i = 0; i < returnedDigits; i++) {
+              for (let i = 0; i < digitsUsed; i++) {
                 const digit = GenerateRandomDigit();
           
                 onReturnDigit(digit);
@@ -99,6 +98,9 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             total = prevNumber / chosenNumber;
             else if (operation === "")
             total = chosenNumber;
+
+            if (operation != "")
+                setDigitsUsed(digitsUsed + 1);
 
             const formattedTotal = total - Math.floor(total) > 0 ? total.toFixed(2) : total;
             setTotalNumber(Number(formattedTotal));
