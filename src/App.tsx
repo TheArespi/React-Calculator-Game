@@ -17,6 +17,7 @@ function App() {
   const [totalNumber, setTotalNumber] = React.useState<number>(0);
   const [gameState, setGameState] = React.useState<number>(0);
   const [digitsUsed, setDigitsUsed] = React.useState<number>(0);
+  const [correct, setCorrect] = React.useState<boolean>(false);
 
   const validOperations = new Set<string>(); 
   validOperations.add("+");
@@ -72,6 +73,11 @@ function App() {
 
     setTotalNumber(total);
 
+    if (floorNumber < total && total < ceilNumber)
+      setCorrect(true);
+    else
+      setCorrect(false);
+
     setChosenDigitQueue([]);
     setOperation("");
 
@@ -91,8 +97,6 @@ function App() {
     setChosenDigitQueue([]);
     setOperation("");
     setDigitsUsed(0);
-    setPreviousNumber(0);
-    setTotalNumber(0);
   }
 
   const GenerateRandomDigit = () => {
@@ -110,7 +114,11 @@ function App() {
   }
 
   const OnContinue = () => {
-    setPreviousNumber(totalNumber);
+    if (correct)
+      setPreviousNumber(totalNumber);
+    else
+      setPreviousNumber(0);
+
     setTotalNumber(0);
 
     for (let i = 0; i < digitsUsed; i++) {
@@ -121,6 +129,15 @@ function App() {
 
     setGameState(0);
     setDigitsUsed(0);
+
+    GenerateFloorAndCeil();
+  }
+
+  const GenerateFloorAndCeil = () => {
+    const floor = Math.floor(Math.random() * 1000);
+    setFloorNumber(floor);
+    const diff = Math.floor(Math.random() * 500);
+    setCeilNumber(Math.min(1000, floor + diff));
   }
 
   React.useEffect(() => {
@@ -147,6 +164,8 @@ function App() {
       const digit = GenerateRandomDigit();
       setDigitChoices(prev => [...prev, digit]);
     }
+    
+    GenerateFloorAndCeil()
   }, []);
 
   return (
@@ -170,7 +189,10 @@ function App() {
         <div>{floorNumber}</div>
         <div>&lt;</div>
       </TextContainer>
-      <TextContainer>{totalNumber}</TextContainer>
+      <TextContainer 
+        color={gameState == 0 ? "gray-400" : correct ? "emerald-400" : "rose-400"}
+        shadowColor={gameState == 0 ? "gray-500" : correct ? "emerald-500" : "rose-500"}
+      >{totalNumber}</TextContainer>
       <TextContainer justify="between">
         <div>&lt;</div>
         <div>{ceilNumber}</div>
@@ -181,7 +203,7 @@ function App() {
         { digitChoices.map((digit, index) => (
             <DigitButton 
               digit={digit} 
-              textHighlight="text-gray-500" 
+              textHighlight={"text-gray-500"} 
               onPressButton={() => {
                 if (gameState == 1)
                   return;

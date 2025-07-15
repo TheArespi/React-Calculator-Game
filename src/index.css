@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@source inline('bg-rose-{400,500}');
+@source inline('bg-emerald-{400,500}');
+@source inline('bg-gray-{400,500}');
+@source inline('justify-{start,between,end}');
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
