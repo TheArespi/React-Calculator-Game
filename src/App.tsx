@@ -135,8 +135,10 @@ function App() {
   const OnContinue = () => {
     if (correct)
       setPreviousNumber(totalNumber);
-    else
+    else{
       setPreviousNumber(0);
+      setSwaps(5);
+    }
 
     setTotalNumber(0);
 
