@@ -6,5 +6,5 @@
 [X] Fix Issue when converting to calculator component
     [X] digits used discrepancy
     [X] Clear not implemented
-[ ] convert to controller component
+[X] convert to controller component
 [ ] convert to calculatorgame component
