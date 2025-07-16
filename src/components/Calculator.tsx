@@ -7,10 +7,12 @@ interface CalculatorProps {
     gameState: number;
     operation: string;
     sendDigitQueue: string[];
+    toClear: boolean;
     onReturnDigit: (digit: string) => void;
     onEmptyQueue: () => void;
     onSetAddtlScore: (score: number) => void;
     onResult: (correct: boolean) => void;
+    onClearFinished: () => void;
 }
 
 const Calculator: React.FC<CalculatorProps> = (props) => {
@@ -18,10 +20,12 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     gameState,
     operation,
     sendDigitQueue,
+    toClear,
     onReturnDigit,
     onEmptyQueue,
     onSetAddtlScore,
     onResult,
+    onClearFinished,
     } = props
 
     const [chosenDigitQueue, setChosenDigitQueue] = React.useState<string[]>([]);
@@ -123,6 +127,18 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             }
         }
     }, [gameState])
+
+    React.useEffect(() => {
+        if (!toClear)
+            return;
+
+        chosenDigitQueue.forEach(digit => {
+            onReturnDigit(digit);
+        });
+
+        setChosenDigitQueue([]);
+        onClearFinished();
+    }, [toClear]);
 
     React.useEffect(() => {
         GenerateFloorAndCeil()

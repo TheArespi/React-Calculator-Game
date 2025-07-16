@@ -16,6 +16,7 @@ function App() {
   const [gameState, setGameState] = React.useState<number>(0);
   const [digitsUsed, setDigitsUsed] = React.useState<number>(0);
   const [correct, setCorrect] = React.useState<boolean>(false);
+  const [toClear, setToClear] = React.useState<boolean>(false);
   const [swaps, setSwaps] = React.useState<number>(5);
   const [addtlScore, setAddtlScore] = React.useState<number>(0);
 
@@ -64,9 +65,8 @@ function App() {
     setSendDigitQueue([]);
     setOperation("");
     setDigitsUsed(0);
+    setToClear(true);
   }
-
-  
 
   const OnContinue = () => {
     if (correct) {
@@ -96,6 +96,10 @@ function App() {
     setCorrect(result);
   }
 
+  const onClearFinished = () => {
+    setToClear(false);
+  }
+
   React.useEffect(() => {
     setDigitChoices([]);
     for(let i = 0; i < 6; i++) {
@@ -111,10 +115,12 @@ function App() {
       gameState={gameState}
       operation={operation}
       sendDigitQueue={sendDigitQueue}
+      toClear={toClear}
       onReturnDigit={OnDigitReturned}
       onEmptyQueue={onEmptyQueue}
       onSetAddtlScore={onSetAddtlScore} 
-      onResult={onResult}      
+      onResult={onResult}    
+      onClearFinished={onClearFinished}  
     />  
     <div className="m-1.5 flex items-center justify-center gap-1.5 rounded bg-gray-300 p-3">
       <TextContainer color="rose-400" shadowColor='rose-500'>Swaps: {swaps}</TextContainer>
