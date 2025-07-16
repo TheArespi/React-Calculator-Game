@@ -6,6 +6,7 @@ import React from 'react'
 import Header from './components/Header'
 import Calculator from './components/Calculator'
 import { GenerateRandomDigit, IsDigitValid, IsOperationValid } from './utils/GenerateHelpers'
+import Controller from './components/Controller'
 
 function App() {
 
@@ -25,32 +26,9 @@ function App() {
       return;
 
     if (IsOperationValid(digit)) {
-      if (operation != "") {
-        setDigitChoices(prev => [...prev, operation]);
-      } else {
-        setDigitsUsed(digitsUsed + 1);
-      }
-
       setOperation(digit);
     } else if (IsDigitValid(digit)) {
       setSendDigitQueue(prev => [...prev, digit]);
-    }
-  }
-
-  const onDigitSwap = (digit: string) => {
-    if (gameState == 1)
-      return;
-
-    if (swaps > 0) {
-      let newDigit = digit;
-      while(newDigit === digit) {
-        newDigit = GenerateRandomDigit();
-      }
-      setDigitChoices(prev => [...prev, newDigit]);
-      setSwaps(swaps - 1);
-
-    } else {
-      setDigitChoices(prev => [...prev, digit]);
     }
   }
 
@@ -69,13 +47,9 @@ function App() {
   }
 
   const OnContinue = () => {
-    if (correct) {
-      
-    } else {
-      setSwaps(5);
-      setAddtlScore(0);
-    }
-
+    if (!correct)
+      setAddtlScore(addtlScore);
+    
     setOperation("");
     setGameState(0);
   }
@@ -96,17 +70,13 @@ function App() {
     setCorrect(result);
   }
 
+  const onReturnsConsumed = () => {
+    setDigitChoices([]);
+  }
+
   const onClearFinished = () => {
     setToClear(false);
   }
-
-  React.useEffect(() => {
-    setDigitChoices([]);
-    for(let i = 0; i < 6; i++) {
-      const digit = GenerateRandomDigit();
-      setDigitChoices(prev => [...prev, digit]);
-    }
-  }, []);
 
   return (
     <>
@@ -122,68 +92,16 @@ function App() {
       onResult={onResult}    
       onClearFinished={onClearFinished}  
     />  
-    <div className="m-1.5 flex items-center justify-center gap-1.5 rounded bg-gray-300 p-3">
-      <TextContainer color="rose-400" shadowColor='rose-500'>Swaps: {swaps}</TextContainer>
-      <div className="mb-1.5 flex gap-1.5 rounded-sm bg-gray-400 p-1.5 font-mono text-4xl font-bold">
-        { digitChoices.map((digit, index) => (
-            <DigitButton 
-              digit={digit} 
-              textHighlight={"text-gray-500"} 
-              onPressButton={() => {
-                if (gameState == 1)
-                  return;
-
-                OnDigitChosen(digit);
-                setDigitChoices(prev => prev.filter((_, i) => i != index));
-              }}
-              onRightClick={() => {
-                if (gameState == 1)
-                  return;
-
-                onDigitSwap(digit);
-                setDigitChoices(prev => prev.filter((_, i) => i != index));
-              }}
-              />
-          ))
-        }
-      </div>
-      <div className="justify-right mb-1.5 flex gap-1.5 rounded-sm bg-gray-400 p-1.5 font-mono text-4xl font-bold">
-        {
-          gameState == 0 ? (
-            <>
-              <DigitButton 
-                digit="=" 
-                color="bg-blue-500" 
-                shadowColor="bg-blue-700" 
-                textColor="text-white" 
-                textHighlight="text-blue-200" 
-                onPressButton={OnEquals}
-              />
-              <DigitButton 
-                digit="CLEAR" 
-                width={30} 
-                color="bg-blue-500" 
-                shadowColor="bg-blue-700" 
-                textColor="text-white" 
-                textHighlight="text-blue-200" 
-                onPressButton={OnClear}
-              />
-            </>
-          ) : (
-            <DigitButton 
-              digit="CONTINUE" 
-              width={50} 
-              color="bg-blue-500" 
-              shadowColor="bg-blue-700" 
-              textColor="text-white" 
-              textHighlight="text-blue-200" 
-              onPressButton={OnContinue}
-            />
-          )
-        }
-        
-      </div>
-    </div>
+    <Controller 
+      gameState={gameState} 
+      correct={correct}
+      returnQueue={digitChoices}
+      operation={operation}
+      onDigitChosen={OnDigitChosen} 
+      onEquals={OnEquals} 
+      onClear={OnClear} 
+      onContinue={OnContinue}
+      onReturnsConsumed={onReturnsConsumed} />
   </>
   )
 }

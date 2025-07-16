@@ -46,23 +46,26 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     }
 
     React.useEffect(() => {
-        if (sendDigitQueue.length <= 0) {
-            
-        } else {
-            const localQueue = sendDigitQueue;
+        if (!sendDigitQueue.length)
+            return;
+        
+        let newChosen = [...chosenDigitQueue];
+        const toReturn: string[] = [];
 
-            localQueue.forEach(digit => {
-                if (chosenDigitQueue.length < 3) {
-                    setChosenDigitQueue(prev => [...prev, digit]);
-                    setDigitsUsed(digitsUsed + 1);
-                } else {
-                    if (onReturnDigit)
-                        onReturnDigit(digit);
-                }
-            })
+        sendDigitQueue.forEach(digit => {
+            if (newChosen.length < 3) {
+                newChosen.push(digit);
+            } else {
+                toReturn.push(digit);
+            }
+        });
 
-            onEmptyQueue();
-        }
+        setChosenDigitQueue(newChosen);
+        setDigitsUsed(prev => prev + newChosen.length - chosenDigitQueue.length);
+
+        toReturn.forEach(digit => onReturnDigit(digit));
+
+        onEmptyQueue();
     }, [sendDigitQueue]);
 
     React.useEffect(() => {
