@@ -38,6 +38,9 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     const [ceilNumber, setCeilNumber] = React.useState<number>(0);
     const [floorNumber, setFloorNumber] = React.useState<number>(0);
 
+    const [digitTooltip, setDigitToolTip] = React.useState<string>("This is where your number is placed.");
+    const [operationTooltip, setOperationToolTip] = React.useState<string>("This is where the operation is added. Using an operation on a round, will double the score");
+
     const GenerateFloorAndCeil = () => {
         const floor = Math.floor(Math.random() * 1000);
         setFloorNumber(floor);
@@ -67,6 +70,24 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
 
         onEmptyQueue();
     }, [sendDigitQueue]);
+
+    React.useEffect(() => {
+        if (digitsUsed <= 0)
+            setDigitToolTip("This is where your number is placed.")
+        else if (digitsUsed == 1)
+            setDigitToolTip("Since you only used 1 digit, you will score 3 points");
+        else if (digitsUsed == 2)
+            setDigitToolTip("since you used 2 digits, you will score 2 points");
+        else if (digitsUsed >= 3)
+            setDigitToolTip("Since you used 3 digits, you will score 1 point");
+    }, [digitsUsed]);
+
+    React.useEffect(() => {
+        if (operation == "")
+            setOperationToolTip("This is where the operation is added. Using an operation on a round, will double the score");
+        else 
+            setOperationToolTip(`Since you used an operator, your score of ${4 - digitsUsed} is doubled to ${ 2 * (4 * digitsUsed)}`);
+    }, [operation]);
 
     React.useEffect(() => {
         if (gameState == 0) {
@@ -151,27 +172,28 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
         <div className="m-1.5 grid grid-cols-3 gap-1.5 rounded bg-gray-300 p-3">
             <div></div>
             <div>
-                <TextContainer>{previousNumber}</TextContainer>
+                <TextContainer title="This is the total from the previous round. Your next total will be affected based on this number.">{previousNumber}</TextContainer>
                 <div className="mb-1.5 flex justify-between text-center gap-5">
-                <DigitContainer digit={operation}/>
+                <DigitContainer digit={operation} title={operationTooltip}/>
                 <div className="flex gap-1.5">
-                    <DigitContainer digit={chosenDigitQueue.length >= 1 ? chosenDigitQueue[0] : ""}/>
-                    <DigitContainer digit={chosenDigitQueue.length >= 2 ? chosenDigitQueue[1] : ""}/>
-                    <DigitContainer digit={chosenDigitQueue.length >= 3 ? chosenDigitQueue[2] : ""}/>
+                    <DigitContainer digit={chosenDigitQueue.length >= 1 ? chosenDigitQueue[0] : ""} title={digitTooltip}/>
+                    <DigitContainer digit={chosenDigitQueue.length >= 2 ? chosenDigitQueue[1] : ""} title={digitTooltip}/>
+                    <DigitContainer digit={chosenDigitQueue.length >= 3 ? chosenDigitQueue[2] : ""} title={digitTooltip}/>
                 </div>
                 </div>
                 <div className="h-1.5 w-full rounded bg-gray-400"></div>
             </div>
             <div></div>
-            <TextContainer justify="between">
+            <TextContainer justify="between" title="This is the lower bounds of the range. In order to win this round, the total should not be lower than this number">
                 <div>{floorNumber}</div>
                 <div>&lt;</div>
             </TextContainer>
             <TextContainer 
                 color={gameState == 0 ? "gray-400" : correct ? "emerald-400" : "rose-400"}
                 shadowColor={gameState == 0 ? "gray-500" : correct ? "emerald-500" : "rose-500"}
+                title="This is the total for this round. This number should be within the bounds of the range in order to win"
             >{totalNumber}</TextContainer>
-            <TextContainer justify="between">
+            <TextContainer justify="between" title="This is the higher bounds of the range. In order to win this round, the total should not be higher than this number">
                 <div>&lt;</div>
                 <div>{ceilNumber}</div>
             </TextContainer>

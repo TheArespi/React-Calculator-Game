@@ -1,7 +1,7 @@
 import React from "react";
 import DigitButton from "./DigitButton";
 import TextContainer from "./TextContainer";
-import { GenerateRandomDigit, IsDigitValid, IsOperationValid } from "../utils/GenerateHelpers";
+import { GenerateRandomDigit, IsOperationValid } from "../utils/GenerateHelpers";
 
 interface ControllerProps {
     gameState: number;
